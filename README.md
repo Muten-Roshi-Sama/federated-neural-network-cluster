@@ -1,11 +1,11 @@
 # federated-neural-network-cluster
 
 Federated deep learning for early intrusion detection on Linux and cloud server
-clusters. A shared neural-network detector is trained across multiple nodes
-without exchanging raw logs, and every flagged event is explained to a human
-analyst.
+clusters.
 
-Deep Learning course project (Master's, 6 credits).
+Goal :
+- A shared neural-network detector is trained across multiple nodes
+- without exchanging raw logs, and every flagged event is explained to a human analyst.
 
 Using the [Flemish Supercomputer Center (VSC)](https://docs.vscentrum.be/index.html).
 
@@ -151,7 +151,103 @@ origin → manageable download and parse time → clear license.
 
 
 
+## Notes
 
+- use multiple datasets, study (https://doaj.org/article/20dcb8ffe1d9422390c12b1fb85205b6#1) found that combining multiple datasets reduced overfitting
+- merging datasets might not be easy. but FL can be used advantegeously here, Treat multiple datasets as mutliple clients of the network. Letting the federated aggregate the results.
+
+
+Data augmentation :
+- enrich each client's local dataset, particularly for rare attack types, without sharing raw data.
+- Federated WGANs (e.g., FedWID) (https://dl.acm.org/doi/10.1007/s42979-025-04531-y#1)
+- LLM-Guided Augmentation (e.g., GAIA-FL)
+- SMOTE / ADASYN
+- Random Oversampling
+
+
+
+Advantages of FL :
+- privacy regulations and operational limitations that prevent organizations from pooling raw network logs.
+- transmit only a few MBs of model weights instead of +50GBs of raw logs
+
+
+
+
+Datasets comparison :
+
+
+AIT Log Data Set V2.1 :
+- https://zenodo.org/records/19483937#1
+- Logs : Apache access and error logs, authentication logs, DNS logs, VPN logs, audit logs, Suricata logs, network traffic packet captures, horde logs, exim logs, syslog, and system monitoring logs.
+- Attacks : Scans (nmap, WPScan, dirb), Webshell upload (CVE-2020-24186), Password cracking (John the Ripper), Privilege escalation, Remote command execution, Data exfiltration (DNSteal)
+- Has enough benign traffic, already partitionned into 8 silos
+- License : CC BY 4.0 (academic + commercial use.)
+
+
+Entente Cross-silo :
+- https://zenodo.org/records/16014433#1
+- for GNNs
+
+
+
+
+
+UNSW-NB15 : 
+- j
+
+
+
+TON_IoT :
+- j
+
+
+
+Mendeley Federated IoT/PC Traffic :
+- Unsupervised learning : attack labels exist on testing set only.
+- explicitly designed for FL experiments, fast prototyping only. 
+- small, ~70k rows and tabular make it smoke test only
+
+
+
+CAM-LDS :
+- https://zenodo.org/records/18861762#1
+- NO BENINGN LOGS. (hard to train classification without it).
+- simulate real small linux entreprise (dmz, lan, repo server, dns, firewall, user workstation ...)
+- logs (audit, authentication, appache access and erro, syslog, package management, cron, Zoneminder, FTP, Pupper, Docker, Nextcloud, mail ...)
+- seven scenarios/attack chains : video server exploit, linuc mlware, lateral movement, network attack;network sniffing, attack on client, **Docker attack**.
+- License ? tbd but must cite publication listed.
+
+
+Dedale :
+- https://entrepot.recherche.data.gouv.fr/dataset.xhtml?persistentId=doi:10.57745/Y5JLDG&version=2.0
+- Very large (1TB) and very low proportion of attacks
+- APT detection among logs
+- 4 weeks of logs, apt attack lasting 8 days
+- stealthy attack scenario, no brute forece or noisy attack types.
+- License : Creative Commons Attribution 4.0 International License
+
+
+---
+Choice : 
+- AIT as primary
+- Mendeley as smoke-test
+
+Model :
+- LSTM : classic for log detection. See DeepLog, LogAnomaly. Simple to train.
+- Transformers : LogBERT
+- hybrid model that uses a transformer-based encoder for log embedding and a bidirectional LSTM with attention for sequence modeling (https://ieeexplore.ieee.org/document/11650311#1).
+
+
+
+Multi-dataset Federated Learning :
+- each dataset as separate client.
+- study shows better performance (but pecif for IoT) : https://ora.ox.ac.uk/objects/uuid:c942fb20-d675-4deb-98a8-0e333e36681d
+- must harmonize labels (e.g., map different attack names to a common family-level schema) and align features to their intersection set before training.
+
+Federated Transfer Learning :
+-  using a model pre-trained on one dataset (e.g., AIT) as a starting point and fine-tuning it on another.
+- A two-stage LSTM pipeline is one such framework designed for this purpose.
+- SOURCE ? Research on Federated Transfer Learning (FTL) for intrusion detection has shown that this approach can effectively improve detection accuracy and training efficiency. 
 
 
 
