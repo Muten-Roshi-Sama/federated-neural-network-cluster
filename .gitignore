@@ -1,0 +1,8 @@
+/fedora-venv
+/venv
+
+
+/datasets/*
+
+
+.ipynb_checkpoints
