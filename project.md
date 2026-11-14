@@ -71,4 +71,23 @@ Can use already existing tools like :
 
 
 
+
+## Extra notes
+
+### Data augmentation 
+The validity of any data augmentation is a statement about the invariance of the label with respect to the transformation:
+
+Augmentation T is safe ⟺ for every valid input x, label(T(x)) = label(x) and T(x) is a plausible input.
+
+For your IDS project, this principle maps directly to feature perturbation augmentation you might use on tabular network flows:
+
+Safe: adding small Gaussian noise to byte counts (still benign or attack).
+
+Unsafe: zeroing out the proto field (would change what "TCP vs. UDP" means — a semantic change, not a perturbation).
+
+Every augmentation must be justified by an argument that the invariance is real for the data, not just that "it makes the model more robust". The exam question is exactly testing whether you can articulate that argument.
+
+
+
+
 --- end
